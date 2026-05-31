@@ -1,0 +1,13 @@
+# build output
+dist/
+# deps
+node_modules/
+# astro
+.astro/
+# vercel
+.vercel/
+# env + secrets
+.env
+.env.production
+# os
+.DS_Store

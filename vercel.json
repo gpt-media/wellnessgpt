@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    { "source": "/articles/:path*", "destination": "/my/articles/:path*", "permanent": true },
+    { "source": "/ms/:path*", "destination": "/my/ms/:path*", "permanent": true },
+    { "source": "/zh/:path*", "destination": "/my/zh/:path*", "permanent": true },
+    { "source": "/about/", "destination": "/my/about/", "permanent": true },
+    { "source": "/editorial-standards/", "destination": "/my/editorial-standards/", "permanent": true },
+    { "source": "/medical-disclaimer/", "destination": "/my/medical-disclaimer/", "permanent": true }
+  ]
+}

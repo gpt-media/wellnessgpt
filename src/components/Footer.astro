@@ -1,0 +1,33 @@
+---
+const year = 2026;
+const p = Astro.url.pathname;
+const isMY = p === '/my' || p.startsWith('/my/');
+const isSG = p === '/sg' || p.startsWith('/sg/');
+const market = isMY ? 'my' : isSG ? 'sg' : null;
+
+let lang: 'en' | 'ms' | 'zh' = 'en';
+let base = '';
+if (market) {
+  let rest = p.slice(3) || '/';
+  if (rest === '/ms' || rest.startsWith('/ms/')) lang = 'ms';
+  else if (rest === '/zh' || rest.startsWith('/zh/')) lang = 'zh';
+  base = `/${market}${lang === 'en' ? '' : '/' + lang}`;
+}
+const t = {
+  about: { en: 'About', ms: 'Tentang', zh: '关于' }[lang],
+  standards: { en: 'Editorial Standards', ms: 'Piawaian Editorial', zh: '编辑标准' }[lang],
+  disclaimer: { en: 'Medical Disclaimer', ms: 'Penafian Perubatan', zh: '医疗免责声明' }[lang],
+};
+---
+<footer class="site-footer">
+  <div class="wrap">
+    {market && (
+      <nav class="footer-nav">
+        <a href={`${base}/about/`}>{t.about}</a>
+        <a href={`${base}/editorial-standards/`}>{t.standards}</a>
+        <a href={`${base}/medical-disclaimer/`}>{t.disclaimer}</a>
+      </nav>
+    )}
+    <p class="fineprint">&copy; {year} TheWellnessGPT. All rights reserved.</p>
+  </div>
+</footer>

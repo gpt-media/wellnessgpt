@@ -1,0 +1,82 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Structured data objects (schema.org) injected as JSON-LD - the AIO backbone. */
+  jsonLd?: Record<string, any>[];
+  ogType?: string;
+  /** Content language. Drives <html lang> + og:locale. 'en' | 'ms' (Malay) | 'zh' (Chinese). */
+  lang?: 'en' | 'ms' | 'zh';
+  /** Market region. 'my' (Malaysia) | 'sg' (Singapore). Sets the region in <html lang> + og:locale. */
+  market?: 'my' | 'sg';
+  /** Language-agnostic path suffix (e.g. '/', '/about/', '/articles/foo/') used to build hreflang alternates. */
+  path?: string;
+}
+
+const { title, description, jsonLd = [], ogType = 'website', lang = 'en', market = 'my', path } = Astro.props;
+const reg = market === 'sg' ? 'SG' : 'MY';
+const langCode = `${ { en: 'en', ms: 'ms', zh: 'zh' }[lang] }-${reg}`;
+const ogLocale = `${ { en: 'en', ms: 'ms', zh: 'zh' }[lang] }_${reg}`;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+// hreflang alternates (only when the page exists in all three languages — pass `path`).
+const hb = market === 'sg' ? '/sg' : '/my';
+const alternates = path
+  ? [
+      { hreflang: `en-${reg}`, href: new URL(`${hb}${path}`, Astro.site).href },
+      { hreflang: `ms-${reg}`, href: new URL(`${hb}/ms${path}`, Astro.site).href },
+      { hreflang: `zh-${reg}`, href: new URL(`${hb}/zh${path}`, Astro.site).href },
+      { hreflang: 'x-default', href: new URL(`${hb}${path}`, Astro.site).href },
+    ]
+  : [];
+const fullTitle = title === 'TheWellnessGPT'
+  ? 'TheWellnessGPT: Smarter answers for how you feel'
+  : `${title} | TheWellnessGPT`;
+---
+<!doctype html>
+<html lang={langCode}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {alternates.map((a) => (
+      <link rel="alternate" hreflang={a.hreflang} href={a.href} />
+    ))}
+
+    <!-- Open Graph / social -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="TheWellnessGPT" />
+    <meta property="og:locale" content={ogLocale} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Organization structured data - establishes the publisher entity for AI engines -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: 'TheWellnessGPT',
+      url: 'https://thewellnessgpt.com',
+      description: 'Evidence-led wellness guidance for life in Malaysia.',
+    })} />
+
+    {jsonLd.map((obj) => (
+      <script type="application/ld+json" set:html={JSON.stringify(obj)} />
+    ))}
+
+    <link rel="sitemap" href="/sitemap-index.xml" />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

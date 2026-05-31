@@ -1,0 +1,69 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles-zh');
+  return articles.map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const d = entry.data;
+const fmt = (dt: Date) => dt.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+const url = new URL(`/my/zh/articles/${entry.slug}/`, Astro.site).href;
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: d.title,
+  description: d.description,
+  datePublished: d.publishDate.toISOString(),
+  dateModified: (d.updatedDate ?? d.publishDate).toISOString(),
+  author: { '@type': 'Organization', name: d.author },
+  publisher: { '@type': 'Organization', name: 'TheWellnessGPT', url: 'https://thewellnessgpt.com' },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+  inLanguage: 'zh-MY',
+};
+
+const faqSchema = d.faqs.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: d.faqs.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    }
+  : null;
+
+const jsonLd = faqSchema ? [articleSchema, faqSchema] : [articleSchema];
+---
+<BaseLayout title={d.title} description={d.description} jsonLd={jsonLd} ogType="article" lang="zh" path={`/articles/${entry.slug}/`}>
+  <article class="article">
+    <div class="wrap">
+      <p class="kicker">{d.category}</p>
+      <h1>{d.title}</h1>
+      <p class="meta">
+        作者 {d.author} · 发布于 {fmt(d.publishDate)}
+        {d.updatedDate && <> · 更新于 {fmt(d.updatedDate)}</>}
+      </p>
+      <div class="article-body">
+        <Content />
+      </div>
+
+      {d.faqs.length > 0 && (
+        <section class="faq">
+          <h2>常见问题</h2>
+          {d.faqs.map((f) => (
+            <details>
+              <summary>{f.q}</summary>
+              <p>{f.a}</p>
+            </details>
+          ))}
+        </section>
+      )}
+    </div>
+  </article>
+</BaseLayout>

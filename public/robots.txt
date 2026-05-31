@@ -1,0 +1,36 @@
+# TheWellnessGPT robots.txt
+# Strategy (AIO): we WANT AI answer engines to read + cite us. That's the moat.
+# So we explicitly welcome the AI crawlers most sites block.
+
+User-agent: *
+Allow: /
+
+# AI answer-engine crawlers — explicitly welcomed
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: https://thewellnessgpt.com/sitemap-index.xml
