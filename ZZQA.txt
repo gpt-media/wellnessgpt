@@ -1,0 +1,6 @@
+EM=0 EN=6 EN_BAD=0
+WONE=0 OLLA=0
+FAQ=5 BODYWORDS=1668 EXT=2 INTLINKS=7
+BADSLUG=none
+SLUGS=do-probiotics-work,prebiotics-vs-probiotics,probiotic-strains-explained,how-to-choose-a-probiotic,best-probiotics-malaysia,are-probiotic-drinks-worth-it,when-to-take-probiotics
+EXTURLS=https://isappscience.org/for-consumers/learn/probiotics/ | https://www.cochrane.org/CD006095/IBD_use-probiotics-prevent-clostridium-difficile-diarrhea-people-taking-antibiotics
