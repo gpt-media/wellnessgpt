@@ -1,18 +1,19 @@
 ---
 import { getCollection } from 'astro:content';
-import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
-  const articles = await getCollection('articles-sg-ms');
+  const articles = await getCollection('articles');
   return articles.map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
 }
 
 const { entry } = Astro.props;
 const { Content } = await entry.render();
 const d = entry.data;
-const fmt = (dt: Date) => dt.toLocaleDateString('ms-SG', { year: 'numeric', month: 'long', day: 'numeric' });
-const url = new URL(`/sg/ms/articles/${entry.slug}/`, Astro.site).href;
+const fmt = (dt: Date) => dt.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+const url = new URL(`/articles/${entry.slug}/`, Astro.site).href;
 
+// Article structured data — tells AI engines this is a citeable, dated, authored answer.
 const articleSchema = {
   '@context': 'https://schema.org',
   '@type': 'Article',
@@ -23,9 +24,10 @@ const articleSchema = {
   author: { '@type': 'Organization', name: d.author },
   publisher: { '@type': 'Organization', name: 'TheWellnessGPT', url: 'https://thewellnessgpt.com' },
   mainEntityOfPage: { '@type': 'WebPage', '@id': url },
-  inLanguage: 'ms-SG',
+  inLanguage: 'en',
 };
 
+// FAQPage structured data — the single highest-value schema for getting pulled into AI answers.
 const faqSchema = d.faqs.length
   ? {
       '@context': 'https://schema.org',
@@ -40,14 +42,14 @@ const faqSchema = d.faqs.length
 
 const jsonLd = faqSchema ? [articleSchema, faqSchema] : [articleSchema];
 ---
-<BaseLayout title={d.title} description={d.description} jsonLd={jsonLd} ogType="article" lang="ms" market="sg" path={`/articles/${entry.slug}/`}>
+<BaseLayout title={d.title} description={d.description} jsonLd={jsonLd} ogType="article" path={`/articles/${entry.slug}/`}>
   <article class="article">
     <div class="wrap">
       <p class="kicker">{d.category}</p>
       <h1>{d.title}</h1>
       <p class="meta">
-        Oleh {d.author} · Diterbitkan {fmt(d.publishDate)}
-        {d.updatedDate && <> · Dikemas kini {fmt(d.updatedDate)}</>}
+        By {d.author} · Published {fmt(d.publishDate)}
+        {d.updatedDate && <> · Updated {fmt(d.updatedDate)}</>}
       </p>
       <div class="article-body">
         <Content />
@@ -55,7 +57,7 @@ const jsonLd = faqSchema ? [articleSchema, faqSchema] : [articleSchema];
 
       {d.faqs.length > 0 && (
         <section class="faq">
-          <h2>Soalan lazim</h2>
+          <h2>Frequently asked questions</h2>
           {d.faqs.map((f) => (
             <details>
               <summary>{f.q}</summary>
