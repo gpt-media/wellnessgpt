@@ -33,4 +33,4 @@ Allow: /
 User-agent: Applebot-Extended
 Allow: /
 
-Sitemap: https://thewellnessgpt.com/sitemap-index.xml
+Sitemap: https://www.thewellnessgpt.com/sitemap-index.xml
