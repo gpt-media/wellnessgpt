@@ -1,10 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { DEFAULT_EDITION } from '../lib/editions';
 ---
 <BaseLayout
+  edition={DEFAULT_EDITION}
+  pathOverride="/about/"
   title="About"
   description="TheWellnessGPT gives evidence-led wellness answers: clear comparisons, real mechanisms, and guidance you can act on, wherever you are."
-  path="/about/"
 >
   <article class="article">
     <div class="wrap">

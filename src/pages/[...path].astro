@@ -1,0 +1,53 @@
+---
+// Single catch-all that renders every edition's homepage and every article, at any
+// depth (/ , /my/ , /my/zh/ , /articles/x/ , /my/zh/articles/x/ ...). All paths come
+// from EDITIONS × the articles collection, so the URL map is exhaustive and verifiable.
+import { getCollection } from 'astro:content';
+import { EDITIONS, editionByKey, routeParam, parseEntryId } from '../lib/editions';
+import HomePage from '../components/HomePage.astro';
+import ArticlePage from '../components/ArticlePage.astro';
+
+export async function getStaticPaths() {
+  const all = await getCollection('articles');
+
+  // slug -> edition keys that actually have this article (drives hreflang + selector cross-links)
+  const presentBySlug = new Map<string, string[]>();
+  for (const e of all) {
+    const { editionKey, slug } = parseEntryId(e.slug);
+    if (!editionByKey(editionKey) || !slug) continue;
+    if (!presentBySlug.has(slug)) presentBySlug.set(slug, []);
+    presentBySlug.get(slug)!.push(editionKey);
+  }
+
+  const allKeys = EDITIONS.map((e) => e.key);
+  const paths: any[] = [];
+
+  // Homepages — one per edition (every edition always has a homepage)
+  for (const ed of EDITIONS) {
+    paths.push({
+      params: { path: routeParam(ed) },
+      props: { kind: 'home', editionKey: ed.key, slug: null, presentKeys: allKeys, entry: null },
+    });
+  }
+
+  // Articles — one per content entry
+  for (const e of all) {
+    const { editionKey, slug } = parseEntryId(e.slug);
+    const ed = editionByKey(editionKey);
+    if (!ed || !slug) continue;
+    paths.push({
+      params: { path: routeParam(ed, slug) },
+      props: { kind: 'article', editionKey, slug, presentKeys: presentBySlug.get(slug) ?? [editionKey], entry: e },
+    });
+  }
+
+  return paths;
+}
+
+const { kind, editionKey, slug, presentKeys, entry } = Astro.props;
+const edition = editionByKey(editionKey)!;
+const presentEditions = EDITIONS.filter((e) => presentKeys.includes(e.key));
+---
+{kind === 'home'
+  ? <HomePage edition={edition} presentEditions={presentEditions} />
+  : <ArticlePage edition={edition} entry={entry} slug={slug} presentEditions={presentEditions} />}

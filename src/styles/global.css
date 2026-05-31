@@ -30,11 +30,23 @@ a:hover { opacity: 0.8; }
 .site-header .wrap { display: flex; align-items: center; justify-content: space-between; padding-top: 18px; padding-bottom: 18px; }
 .logo { font-family: var(--serif); font-size: 24px; font-weight: 700; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
 .logo span { color: var(--accent); }
-.site-header nav a { color: var(--ink-soft); text-decoration: none; margin-left: 20px; font-size: 16px; }
-.site-header nav a:hover { color: var(--accent); }
-.lang-switch { margin-left: 14px; }
-.lang-switch a { margin-left: 8px; font-size: 14px; color: var(--ink-soft); text-decoration: none; }
-.lang-switch a.on { color: var(--ink); font-weight: 700; }
+.site-header nav { display: flex; align-items: center; }
+.site-header nav > a { color: var(--ink-soft); text-decoration: none; margin-left: 20px; font-size: 16px; }
+.site-header nav > a:hover { color: var(--accent); }
+
+/* Header region/language picker — native <details>, no JavaScript */
+.region-picker { position: relative; display: inline-block; margin-left: 18px; }
+.region-picker > summary { list-style: none; cursor: pointer; font-size: 14px; color: var(--ink-soft); user-select: none; }
+.region-picker > summary::-webkit-details-marker { display: none; }
+.region-picker > summary:hover { color: var(--accent); }
+.region-menu { position: absolute; right: 0; top: calc(100% + 8px); z-index: 20; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 6px 14px; min-width: 210px; box-shadow: 0 6px 24px rgba(0,0,0,0.10); }
+.region-group { padding: 8px 0; border-bottom: 1px solid var(--line); }
+.region-group:last-child { border-bottom: 0; }
+.region-name { display: block; font-size: 12px; font-weight: 700; color: var(--ink); margin-bottom: 5px; }
+.region-menu ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.region-menu a { font-size: 14px; color: var(--ink-soft); text-decoration: none; }
+.region-menu a:hover { color: var(--accent); }
+.region-menu a.on { color: var(--ink); font-weight: 700; }
 
 /* Headlines */
 h1, h2, h3 { font-family: var(--serif); line-height: 1.2; letter-spacing: -0.01em; }

@@ -1,13 +1,20 @@
 ---
+import type { Edition } from '../lib/editions';
+import { SITE, UI, pricesNote } from '../lib/site';
+
+interface Props { edition: Edition; }
+const { edition } = Astro.props;
+const t = UI[edition.ui];
 const year = 2026;
 ---
 <footer class="site-footer">
   <div class="wrap">
     <nav class="footer-nav">
-      <a href="/about/">About</a>
-      <a href="/editorial-standards/">Editorial Standards</a>
-      <a href="/medical-disclaimer/">Medical Disclaimer</a>
+      <a href="/about/">{t.navAbout}</a>
+      <a href="/editorial-standards/">{t.footerEditorial}</a>
+      <a href="/medical-disclaimer/">{t.footerDisclaimer}</a>
     </nav>
-    <p class="fineprint">&copy; {year} TheWellnessGPT. All rights reserved.</p>
+    <p class="fineprint">{t.disclaimerLine} · {pricesNote(edition.ui, edition.currency)}</p>
+    <p class="fineprint">&copy; {year} {SITE.name}. {t.rights}</p>
   </div>
 </footer>

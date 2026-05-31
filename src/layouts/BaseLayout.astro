@@ -1,26 +1,48 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { DEFAULT_EDITION, pagePath } from '../lib/editions';
+import type { Edition } from '../lib/editions';
+import { SITE } from '../lib/site';
 import '../styles/global.css';
 
 interface Props {
+  edition: Edition;
+  /** null/undefined = homepage. Ignored when pathOverride is set. */
+  slug?: string | null;
+  /** absolute path for bespoke pages (about / editorial-standards / medical-disclaimer). */
+  pathOverride?: string;
+  /** editions in which THIS exact page exists (for hreflang). Defaults to [edition]. */
+  presentEditions?: Edition[];
   title: string;
+  /** when true, use `title` verbatim as <title> (homepages); else append "| Brand". */
+  rawTitle?: boolean;
   description: string;
-  /** Structured data objects (schema.org) injected as JSON-LD - the AIO backbone. */
   jsonLd?: Record<string, any>[];
   ogType?: string;
-  /** Page path (e.g. '/', '/about/', '/articles/foo/'); reserved for future hreflang. */
-  path?: string;
 }
 
-const { title, description, jsonLd = [], ogType = 'website' } = Astro.props;
-const canonical = new URL(Astro.url.pathname, Astro.site).href;
-const fullTitle = title === 'TheWellnessGPT'
-  ? 'TheWellnessGPT: Smarter answers for how you feel'
-  : `${title} | TheWellnessGPT`;
+const {
+  edition, slug = null, pathOverride, presentEditions,
+  title, rawTitle = false, description, jsonLd = [], ogType = 'website',
+} = Astro.props;
+
+const abs = (p: string) => new URL(p, Astro.site).href;
+const canonicalPath = pathOverride ?? pagePath(edition, slug);
+const canonical = abs(canonicalPath);
+
+// hreflang: bidirectional, every edition where this page exists, plus x-default -> root English.
+const present = presentEditions ?? [edition];
+const alternates = pathOverride
+  ? [{ hreflang: edition.hreflang, href: canonical }]
+  : present.map((e) => ({ hreflang: e.hreflang, href: abs(pagePath(e, slug)) }));
+const xDefaultHref = pathOverride ? canonical : abs(pagePath(DEFAULT_EDITION, slug));
+
+const fullTitle = rawTitle ? title : `${title} | ${SITE.name}`;
+const ogLocale = edition.hreflang.replace(/-/g, '_');
 ---
 <!doctype html>
-<html lang="en">
+<html lang={edition.hreflang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -28,22 +50,28 @@ const fullTitle = title === 'TheWellnessGPT'
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
 
+    <!-- hreflang: all editions of this page + x-default -> root English (Google i18n best practice) -->
+    {alternates.map((a) => (
+      <link rel="alternate" hreflang={a.hreflang} href={a.href} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={xDefaultHref} />
+
     <!-- Open Graph / social -->
     <meta property="og:type" content={ogType} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:site_name" content="TheWellnessGPT" />
-    <meta property="og:locale" content="en" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:locale" content={ogLocale} />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <!-- Organization structured data - establishes the publisher entity for AI engines -->
+    <!-- Organization structured data — the publisher entity for AI engines -->
     <script type="application/ld+json" set:html={JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'TheWellnessGPT',
-      url: 'https://thewellnessgpt.com',
-      description: 'Evidence-led wellness answers for a global audience.',
+      name: SITE.name,
+      url: SITE.domain,
+      description: SITE.orgDescription,
     })} />
 
     {jsonLd.map((obj) => (
@@ -53,10 +81,10 @@ const fullTitle = title === 'TheWellnessGPT'
     <link rel="sitemap" href="/sitemap-index.xml" />
   </head>
   <body>
-    <Header />
+    <Header edition={edition} slug={slug} presentEditions={present} pathOverride={pathOverride} />
     <main>
       <slot />
     </main>
-    <Footer />
+    <Footer edition={edition} />
   </body>
 </html>

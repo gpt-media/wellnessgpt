@@ -1,10 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { DEFAULT_EDITION } from '../lib/editions';
 ---
 <BaseLayout
+  edition={DEFAULT_EDITION}
+  pathOverride="/editorial-standards/"
   title="Editorial Standards & How We Review"
   description="How TheWellnessGPT researches and reviews wellness: mechanism and evidence first, real options compared, sources from established health and nutrition research, and recommendations that are editorial, never paid placements."
-  path="/editorial-standards/"
 >
   <article class="article">
     <div class="wrap">

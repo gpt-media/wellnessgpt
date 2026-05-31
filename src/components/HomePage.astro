@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import type { Edition } from '../lib/editions';
+import { pagePath, parseEntryId } from '../lib/editions';
+import { SITE, HERO, UI } from '../lib/site';
+
+interface Props { edition: Edition; presentEditions?: Edition[]; }
+const { edition, presentEditions } = Astro.props;
+const t = UI[edition.ui];
+const hero = HERO[edition.ui];
+
+const all = (await getCollection('articles'))
+  .filter((e) => parseEntryId(e.slug).editionKey === edition.key)
+  .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+
+const fmt = (d: Date) => d.toLocaleDateString(t.dateLocale, { year: 'numeric', month: 'short', day: 'numeric' });
+const linkFor = (entrySlug: string) => pagePath(edition, parseEntryId(entrySlug).slug);
+
+const featured = all.filter((a) => a.data.featured);
+const rest = all.filter((a) => !a.data.featured);
+const categories = [...new Set(rest.map((a) => a.data.category))];
+const sections = [
+  { title: t.featured, items: featured },
+  ...categories.map((c) => ({ title: c, items: rest.filter((a) => a.data.category === c) })),
+];
+---
+<BaseLayout
+  edition={edition}
+  slug={null}
+  presentEditions={presentEditions}
+  title={`${SITE.name} · ${hero.tagline}`}
+  rawTitle={true}
+  description={hero.intro}
+>
+  <section class="hero">
+    <div class="wrap">
+      <p class="kicker">{hero.kicker}</p>
+      <h1 class="tagline">{hero.tagline}</h1>
+      <p>{hero.intro}</p>
+    </div>
+  </section>
+
+  <div class="wrap">
+    {sections.map((section) => section.items.length > 0 && (
+      <section class="cluster">
+        <h2 class="section-title">{section.title}</h2>
+        <ul class="article-list">
+          {section.items.map((a) => (
+            <li>
+              <a class="title" href={linkFor(a.slug)}>{a.data.title}</a>
+              <p>{a.data.description}</p>
+              <span class="meta">{a.data.category} · {fmt(a.data.publishDate)}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+    {all.length === 0 && <p>{t.emptySoon}</p>}
+  </div>
+</BaseLayout>

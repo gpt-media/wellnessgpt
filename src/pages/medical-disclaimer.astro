@@ -1,10 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { DEFAULT_EDITION } from '../lib/editions';
 ---
 <BaseLayout
+  edition={DEFAULT_EDITION}
+  pathOverride="/medical-disclaimer/"
   title="Medical Disclaimer"
   description="TheWellnessGPT is educational and is not a substitute for professional medical advice. See a doctor or pharmacist before starting supplements or for persistent symptoms."
-  path="/medical-disclaimer/"
 >
   <article class="article">
     <div class="wrap">
