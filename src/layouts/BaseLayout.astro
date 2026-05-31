@@ -81,10 +81,10 @@ const ogLocale = edition.hreflang.replace(/-/g, '_');
     <link rel="sitemap" href="/sitemap-index.xml" />
   </head>
   <body>
-    <Header edition={edition} slug={slug} presentEditions={present} pathOverride={pathOverride} />
+    <Header edition={edition} />
     <main>
       <slot />
     </main>
-    <Footer edition={edition} />
+    <Footer edition={edition} slug={slug} presentEditions={present} pathOverride={pathOverride} />
   </body>
 </html>

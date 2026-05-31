@@ -1,28 +1,12 @@
 ---
 import type { Edition } from '../lib/editions';
-import { editionsByCountry, pagePath } from '../lib/editions';
+import { pagePath } from '../lib/editions';
 import { SITE, UI } from '../lib/site';
 
-interface Props {
-  edition: Edition;
-  slug?: string | null;
-  presentEditions?: Edition[];
-  pathOverride?: string;
-}
-const { edition, slug = null, presentEditions, pathOverride } = Astro.props;
+interface Props { edition: Edition; }
+const { edition } = Astro.props;
 const t = UI[edition.ui];
-const present = presentEditions ?? [edition];
-const presentKeys = new Set(present.map((e) => e.key));
 const homeHref = pagePath(edition); // logo + Home stay within the current edition
-
-// No auto-redirects (Google i18n rule): the reader switches here. Land on the same
-// page where it exists in the target edition, else that edition's homepage.
-function switchHref(e: Edition): string {
-  if (pathOverride) return e.key === edition.key ? pathOverride : pagePath(e);
-  if (presentKeys.has(e.key)) return pagePath(e, slug);
-  return pagePath(e);
-}
-const groups = editionsByCountry();
 ---
 <header class="site-header">
   <div class="wrap">
@@ -30,27 +14,6 @@ const groups = editionsByCountry();
     <nav>
       <a href={homeHref}>{t.navHome}</a>
       <a href="/about/">{t.navAbout}</a>
-      <details class="region-picker">
-        <summary>{edition.flag} {edition.langLabel}</summary>
-        <div class="region-menu" role="menu" aria-label={t.pickerLabel}>
-          {groups.map((g) => (
-            <div class="region-group">
-              <span class="region-name">{g.flag} {g.country}</span>
-              <ul>
-                {g.editions.map((e) => (
-                  <li>
-                    <a
-                      href={switchHref(e)}
-                      class={e.key === edition.key ? 'on' : undefined}
-                      aria-current={e.key === edition.key ? 'true' : undefined}
-                    >{e.langLabel}</a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </details>
     </nav>
   </div>
 </header>

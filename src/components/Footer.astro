@@ -1,11 +1,29 @@
 ---
 import type { Edition } from '../lib/editions';
+import { editionsByCountry, pagePath } from '../lib/editions';
 import { SITE, UI } from '../lib/site';
 
-interface Props { edition: Edition; }
-const { edition } = Astro.props;
+interface Props {
+  edition: Edition;
+  slug?: string | null;
+  presentEditions?: Edition[];
+  pathOverride?: string;
+}
+const { edition, slug = null, presentEditions, pathOverride } = Astro.props;
 const t = UI[edition.ui];
 const year = 2026;
+
+// Region/language switcher lives in the footer (clean, authority-style header; hreflang does
+// the search-engine routing). No auto-redirect — the reader chooses. Each link lands on the
+// same page where it exists in the target edition, else that edition's homepage.
+const present = presentEditions ?? [edition];
+const presentKeys = new Set(present.map((e) => e.key));
+function switchHref(e: Edition): string {
+  if (pathOverride) return e.key === edition.key ? pathOverride : pagePath(e);
+  if (presentKeys.has(e.key)) return pagePath(e, slug);
+  return pagePath(e);
+}
+const groups = editionsByCountry();
 ---
 <footer class="site-footer">
   <div class="wrap">
@@ -14,6 +32,23 @@ const year = 2026;
       <a href="/editorial-standards/">{t.footerEditorial}</a>
       <a href="/medical-disclaimer/">{t.footerDisclaimer}</a>
     </nav>
+    <div class="footer-editions" aria-label={t.pickerLabel}>
+      {groups.map((g) => (
+        <span class="fe-group">
+          <span class="fe-flag">{g.flag}</span>
+          {g.editions.map((e, i) => (
+            <>
+              {i > 0 && <span class="fe-sep">·</span>}
+              <a
+                href={switchHref(e)}
+                class={e.key === edition.key ? 'on' : undefined}
+                aria-current={e.key === edition.key ? 'true' : undefined}
+              >{e.langLabel}</a>
+            </>
+          ))}
+        </span>
+      ))}
+    </div>
     <p class="fineprint">{t.disclaimerLine}</p>
     <p class="fineprint">&copy; {year} {SITE.name}. {t.rights}</p>
   </div>
