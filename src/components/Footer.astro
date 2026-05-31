@@ -1,6 +1,6 @@
 ---
 import type { Edition } from '../lib/editions';
-import { SITE, UI, pricesNote } from '../lib/site';
+import { SITE, UI } from '../lib/site';
 
 interface Props { edition: Edition; }
 const { edition } = Astro.props;
@@ -14,7 +14,7 @@ const year = 2026;
       <a href="/editorial-standards/">{t.footerEditorial}</a>
       <a href="/medical-disclaimer/">{t.footerDisclaimer}</a>
     </nav>
-    <p class="fineprint">{t.disclaimerLine} · {pricesNote(edition.ui, edition.currency)}</p>
+    <p class="fineprint">{t.disclaimerLine}</p>
     <p class="fineprint">&copy; {year} {SITE.name}. {t.rights}</p>
   </div>
 </footer>
