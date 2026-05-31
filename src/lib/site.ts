@@ -8,7 +8,7 @@ import type { UiKey } from './editions';
 
 export const SITE = {
   name: 'TheWellnessGPT',
-  domain: 'https://www.thewellnessgpt.com',
+  domain: 'https://thewellnessgpt.com',
   /** logo renders as: The<span class=accent>Wellness</span>GPT */
   logo: { pre: 'The', accent: 'Wellness', post: 'GPT' },
   defaultAuthor: 'TheWellnessGPT Editors',

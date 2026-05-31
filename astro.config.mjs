@@ -7,7 +7,7 @@ import sitemap from '@astrojs/sitemap';
 // (x-default); country editions (/my/ /sg/ /tw/) + language subfolders are one
 // `articles` collection keyed by edition sub-folder. See src/lib/editions.ts.
 export default defineConfig({
-  site: 'https://www.thewellnessgpt.com',
+  site: 'https://thewellnessgpt.com',
   integrations: [sitemap()],
   build: { format: 'directory' },
 });
