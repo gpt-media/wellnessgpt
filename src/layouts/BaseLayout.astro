@@ -86,6 +86,16 @@ const breadcrumbLd = isHome ? null : {
       description: SITE.orgDescription,
     })} />
 
+    <!-- WebSite structured data — site-level entity for search + AI engines -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: SITE.name,
+      url: SITE.domain,
+      inLanguage: edition.hreflang,
+      publisher: { '@type': 'Organization', name: SITE.name, url: SITE.domain },
+    })} />
+
     {breadcrumbLd && (
       <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} />
     )}
