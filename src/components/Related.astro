@@ -1,0 +1,63 @@
+---
+// Related.astro — component-rendered "Related" block.
+//
+// Derives up to N related articles FROM THE LIVE `articles` collection, SAME EDITION ONLY,
+// so every link it emits resolves to a page that the catch-all actually builds — it can
+// NEVER 404. This replaces hand-typed relative paths in markdown bodies (which rot at scale).
+//
+// Ranking: shared `entities[]` overlap (weighted highest) + shared `category`, then fall
+// back to most-recent same-edition articles. Self is always excluded.
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import type { Edition } from '../lib/editions';
+import { pagePath, parseEntryId } from '../lib/editions';
+import { UI } from '../lib/site';
+
+interface Props {
+  edition: Edition;
+  entry: CollectionEntry<'articles'>;
+  /** how many related links to show. */
+  limit?: number;
+}
+const { edition, entry, limit = 4 } = Astro.props;
+const t = UI[edition.ui];
+
+const self = parseEntryId(entry.slug).slug;
+const myEntities = new Set((entry.data.entities ?? []).map((e) => e.toLowerCase()));
+const myCategory = entry.data.category;
+
+// Candidate pool: same edition, excluding self.
+const pool = (await getCollection('articles'))
+  .filter((e) => {
+    const { editionKey, slug } = parseEntryId(e.slug);
+    return editionKey === edition.key && slug && slug !== self;
+  });
+
+// Score each candidate: entity overlap (×2 each) + shared category (+1), then recency tiebreak.
+const scored = pool
+  .map((e) => {
+    const ents = (e.data.entities ?? []).map((x) => x.toLowerCase());
+    const overlap = ents.filter((x) => myEntities.has(x)).length;
+    const sameCat = e.data.category === myCategory ? 1 : 0;
+    return { e, score: overlap * 2 + sameCat };
+  })
+  .sort((a, b) => {
+    if (b.score !== a.score) return b.score - a.score;
+    return b.e.data.publishDate.valueOf() - a.e.data.publishDate.valueOf();
+  });
+
+// Take up to `limit`. Because the pool itself is the fallback (sorted by recency once score
+// ties at 0), this always fills to `limit` when enough same-edition articles exist.
+const related = scored.slice(0, limit).map((s) => s.e);
+const linkFor = (e: CollectionEntry<'articles'>) => pagePath(edition, parseEntryId(e.slug).slug);
+---
+{related.length > 0 && (
+  <nav class="related" aria-label={t.related}>
+    <h2>{t.related}</h2>
+    <ul>
+      {related.map((e) => (
+        <li><a href={linkFor(e)}>{e.data.title}</a></li>
+      ))}
+    </ul>
+  </nav>
+)}

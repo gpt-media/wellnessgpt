@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Newsletter from './Newsletter.astro';
+import Related from './Related.astro';
 import type { Edition } from '../lib/editions';
 import { pagePath } from '../lib/editions';
 import { SITE, UI } from '../lib/site';
@@ -100,6 +101,8 @@ const jsonLd = faqSchema ? [articleSchema, faqSchema] : [articleSchema];
           ))}
         </section>
       )}
+
+      <Related edition={edition} entry={entry} />
 
       <Newsletter edition={edition} />
     </div>

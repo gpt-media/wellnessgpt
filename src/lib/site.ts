@@ -71,7 +71,7 @@ export const HERO: Record<UiKey, { kicker: string; tagline: string; intro: strin
 /** Mechanical UI chrome (nav, footer, labels). Standard terms, in-language per "one language per page". */
 export const UI: Record<UiKey, Record<string, string>> = {
   en: {
-    navHome: 'Home', navAbout: 'About', featured: 'Featured',
+    navHome: 'Home', navAbout: 'About', featured: 'Featured', related: 'Related',
     faqHeading: 'Frequently asked questions', metaBy: 'By', metaPublished: 'Published', metaUpdated: 'Updated',
     metaReviewed: 'Reviewed by', quickAnswer: 'Quick answer',
     pickerLabel: 'Region & language', footerEditorial: 'Editorial Standards', footerDisclaimer: 'Medical Disclaimer',
@@ -82,7 +82,7 @@ export const UI: Record<UiKey, Record<string, string>> = {
     nlPlaceholder: 'Your email', nlButton: 'Subscribe', nlPrivacy: 'We respect your inbox. Unsubscribe anytime. See our Privacy page.',
   },
   ms: {
-    navHome: 'Laman Utama', navAbout: 'Tentang', featured: 'Pilihan',
+    navHome: 'Laman Utama', navAbout: 'Tentang', featured: 'Pilihan', related: 'Berkaitan',
     faqHeading: 'Soalan lazim', metaBy: 'Oleh', metaPublished: 'Diterbitkan', metaUpdated: 'Dikemas kini',
     metaReviewed: 'Disemak oleh', quickAnswer: 'Jawapan ringkas',
     pickerLabel: 'Wilayah & bahasa', footerEditorial: 'Piawaian Editorial', footerDisclaimer: 'Penafian Perubatan',
@@ -93,7 +93,7 @@ export const UI: Record<UiKey, Record<string, string>> = {
     nlPlaceholder: 'E-mel anda', nlButton: 'Langgan', nlPrivacy: 'Kami hormati peti masuk anda. Berhenti langgan bila-bila masa. Lihat halaman Privasi kami.',
   },
   'zh-Hans': {
-    navHome: '首页', navAbout: '关于', featured: '精选',
+    navHome: '首页', navAbout: '关于', featured: '精选', related: '相关阅读',
     faqHeading: '常见问题', metaBy: '作者', metaPublished: '发布于', metaUpdated: '更新于',
     metaReviewed: '审核', quickAnswer: '快速解答',
     pickerLabel: '地区与语言', footerEditorial: '编辑标准', footerDisclaimer: '医疗免责声明',
@@ -104,7 +104,7 @@ export const UI: Record<UiKey, Record<string, string>> = {
     nlPlaceholder: '你的邮箱', nlButton: '订阅', nlPrivacy: '我们尊重你的邮箱，可随时取消订阅。详见隐私页面。',
   },
   'zh-Hant': {
-    navHome: '首頁', navAbout: '關於', featured: '精選',
+    navHome: '首頁', navAbout: '關於', featured: '精選', related: '相關閱讀',
     faqHeading: '常見問題', metaBy: '作者', metaPublished: '發佈於', metaUpdated: '更新於',
     metaReviewed: '審核', quickAnswer: '快速解答',
     pickerLabel: '地區與語言', footerEditorial: '編輯標準', footerDisclaimer: '醫療免責聲明',

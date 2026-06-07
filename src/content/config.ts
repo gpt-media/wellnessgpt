@@ -19,6 +19,10 @@ const articleSchema = z.object({
   /** optional absolute path to a per-article OG/social image; drives og:image + ImageObject. */
   image: z.string().optional(),
   faqs: z.array(z.object({ q: z.string(), a: z.string() })).default([]),
+  /** Optional entity tags (topics, strains, compounds) — substrate for entity-overlap
+   *  related-linking + topical-cluster signals. Optional by design: not every article needs
+   *  it; the Related block falls back to category + recency when absent. NOT backfilled. */
+  entities: z.array(z.string()).optional(),
 });
 
 const articles = defineCollection({ type: 'content', schema: articleSchema });

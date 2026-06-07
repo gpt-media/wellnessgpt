@@ -94,6 +94,15 @@ h3 { font-size: 1.25rem; margin: 1.5em 0 0.4em; }
 .faq summary { font-weight: 600; cursor: pointer; font-size: 1.05rem; }
 .faq details p { margin: 10px 0 0; color: var(--ink-soft); }
 
+/* Related block */
+.related { margin: 40px 0; padding: 28px 0; border-top: 1px solid var(--line); }
+.related h2 { margin-top: 0; }
+.related ul { list-style: none; padding: 0; margin: 0; }
+.related li { padding: 10px 0; border-bottom: 1px solid var(--line); }
+.related li:last-child { border-bottom: 0; }
+.related a { font-family: var(--serif); font-size: 1.15rem; color: var(--ink); text-decoration: none; }
+.related a:hover { color: var(--accent); }
+
 /* Footer */
 .site-footer { border-top: 1px solid var(--line); background: var(--paper-2); margin-top: 64px; padding: 32px 0; }
 .site-footer .disclosure { font-size: 0.92rem; color: var(--ink-soft); margin: 0 0 12px; }
