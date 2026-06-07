@@ -83,7 +83,7 @@ const breadcrumbLd = isHome ? null : {
     <meta name="twitter:card" content="summary_large_image" />
     {ogImageAbs && <meta name="twitter:image" content={ogImageAbs} />}
 
-    <!-- Organization structured data — the publisher entity for AI engines -->
+    <!-- Organization structured data: the publisher entity for AI engines -->
     <script type="application/ld+json" set:html={JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'Organization',
@@ -95,7 +95,7 @@ const breadcrumbLd = isHome ? null : {
       publishingPrinciples: abs('/editorial-standards/'),
     })} />
 
-    <!-- WebSite structured data — site-level entity for search + AI engines -->
+    <!-- WebSite structured data: site-level entity for search + AI engines -->
     <script type="application/ld+json" set:html={JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'WebSite',
