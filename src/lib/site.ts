@@ -38,6 +38,8 @@ export const SITE = {
    *  independent-publication footprint are a founder call. When enabled the form renders
    *  site-wide and POSTs to `action`. See /privacy/. */
   newsletter: { enabled: false, action: '' },
+  /** Cloudflare Web Analytics beacon token (privacy-first, cookieless; separate property per site to preserve independence) */
+  cfBeaconToken: '',
 };
 
 /** Per-language homepage hero copy (the brand's editorial voice). */
