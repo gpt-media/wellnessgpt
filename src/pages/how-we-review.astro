@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { DEFAULT_EDITION } from '../lib/editions';
+import { SITE } from '../lib/site';
+
+const abs = (p: string) => new URL(p, Astro.site).href;
+// WebPage + Organization (the publisher entity) — the E-E-A-T surface AI engines read to
+// understand exactly how these YMYL wellness answers are researched, graded, and reviewed.
+const reviewLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: `How ${SITE.name} Reviews Content`,
+    url: abs('/how-we-review/'),
+    publisher: {
+      '@type': 'Organization',
+      name: SITE.name,
+      url: SITE.domain,
+      description: SITE.orgDescription,
+      foundingDate: String(SITE.foundingYear),
+      knowsAbout: SITE.knowsAbout,
+      publishingPrinciples: abs('/editorial-standards/'),
+    },
+  },
+];
+---
+<BaseLayout
+  edition={DEFAULT_EDITION}
+  pathOverride="/how-we-review/"
+  title="How We Review"
+  description="How TheWellnessGPT researches, grades evidence, fact-checks, and reviews every wellness answer: primary literature, explicit evidence tiers, in-house editorial review, and prompt corrections."
+  jsonLd={reviewLd}
+>
+  <article class="article">
+    <div class="wrap">
+      <p class="kicker">Methodology</p>
+      <h1>How we review.</h1>
+      <div class="article-body">
+        <p>Wellness is your health, so we treat every answer as a claim that has to be earned. This page explains exactly how an article on TheWellnessGPT is researched, how we grade the evidence behind it, and how it is reviewed before you read it. We would rather show you our work than ask you to take it on trust.</p>
+
+        <h2>How we research</h2>
+        <p>We start from primary literature and authoritative bodies, not from marketing copy or other blogs. For how an ingredient or intervention actually works, we lean on the U.S. National Institutes of Health Office of Dietary Supplements (NIH/ODS), Cochrane systematic reviews, peer-reviewed nutrition and clinical research, registered-dietitian and clinical-nutrition guidance, and patient-facing references from Mayo Clinic and Cleveland Clinic. We do not invent statistics, percentages, or efficacy figures, and we read the underlying study rather than relying on a headline about it.</p>
+
+        <h2>How we grade evidence</h2>
+        <p>Not all evidence is equal, so we say which kind we have. We grade every claim against explicit tiers and tell you which one applies:</p>
+        <ul>
+          <li><strong>Strong human evidence</strong> — multiple well-run human trials, or a systematic review, pointing the same way.</li>
+          <li><strong>Mixed or limited</strong> — some human studies, but small, conflicting, or short-term, so the answer is "promising but not settled."</li>
+          <li><strong>Preliminary or animal/lab only</strong> — mechanism, animal, or test-tube findings that have not been shown to hold in people.</li>
+        </ul>
+        <p>We do not present preliminary findings as settled fact. When a popular claim rests only on a single small study or on animal data, we say so plainly.</p>
+
+        <h2>How articles are reviewed</h2>
+        <p>Every article is written, fact-checked, and reviewed in-house by the {SITE.author.name} against the standards above before it is published. Each health claim is traceable to a cited primary source, and we link those sources so you can check them yourself. A reviewer confirms that the mechanism is described accurately, the evidence grade matches what the research supports, and no claim has been stretched beyond it. If a piece cannot meet that bar, it does not publish.</p>
+
+        <h2>On medical review</h2>
+        <p>To be transparent: our articles are researched, written, and reviewed by the editorial team against the standards above. This site is educational and is not a substitute for personalized medical advice. We do not list a named external medical reviewer, and we will never invent or imply a credential we do not have — stating this plainly is itself part of how we keep your trust. For diagnosis, treatment, or advice about your specific situation — particularly if you are pregnant, breastfeeding, managing a health condition, or taking medication — please consult a qualified doctor or pharmacist. See our <a href="/medical-disclaimer/">medical disclaimer</a> for more.</p>
+
+        <h2>Corrections &amp; updates</h2>
+        <p>Wellness research evolves and products change. When we find an error, we correct it promptly. We revise articles as the evidence moves, and every article shows a published or updated date so you always know how current it is. If you spot something that looks wrong, we want to hear about it.</p>
+
+        <p>For the principles behind all of this, see our <a href="/editorial-standards/">editorial standards</a>.</p>
+      </div>
+    </div>
+  </article>
+</BaseLayout>

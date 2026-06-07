@@ -39,7 +39,7 @@ export const SITE = {
    *  site-wide and POSTs to `action`. See /privacy/. */
   newsletter: { enabled: false, action: '' },
   /** Cloudflare Web Analytics beacon token (privacy-first, cookieless; separate property per site to preserve independence) */
-  cfBeaconToken: '',
+  cfBeaconToken: 'fb4dd3dca1bf4e2583c1ad31a0ea0d37',
 };
 
 /** Per-language homepage hero copy (the brand's editorial voice). */
@@ -76,7 +76,7 @@ export const UI: Record<UiKey, Record<string, string>> = {
     navHome: 'Home', navAbout: 'About', featured: 'Featured', related: 'Related',
     faqHeading: 'Frequently asked questions', metaBy: 'By', metaPublished: 'Published', metaUpdated: 'Updated',
     metaReviewed: 'Reviewed by', quickAnswer: 'Quick answer',
-    pickerLabel: 'Region & language', footerEditorial: 'Editorial Standards', footerDisclaimer: 'Medical Disclaimer',
+    pickerLabel: 'Region & language', footerEditorial: 'Editorial Standards', footerHowWeReview: 'How We Review', footerDisclaimer: 'Medical Disclaimer',
     footerPrivacy: 'Privacy',
     rights: 'All rights reserved.', disclaimerLine: 'Educational content, not medical advice.',
     emptySoon: 'First answers publishing soon.', dateLocale: 'en-GB',
@@ -87,7 +87,7 @@ export const UI: Record<UiKey, Record<string, string>> = {
     navHome: 'Laman Utama', navAbout: 'Tentang', featured: 'Pilihan', related: 'Berkaitan',
     faqHeading: 'Soalan lazim', metaBy: 'Oleh', metaPublished: 'Diterbitkan', metaUpdated: 'Dikemas kini',
     metaReviewed: 'Disemak oleh', quickAnswer: 'Jawapan ringkas',
-    pickerLabel: 'Wilayah & bahasa', footerEditorial: 'Piawaian Editorial', footerDisclaimer: 'Penafian Perubatan',
+    pickerLabel: 'Wilayah & bahasa', footerEditorial: 'Piawaian Editorial', footerHowWeReview: 'Cara Kami Menyemak', footerDisclaimer: 'Penafian Perubatan',
     footerPrivacy: 'Privasi',
     rights: 'Hak cipta terpelihara.', disclaimerLine: 'Kandungan pendidikan, bukan nasihat perubatan.',
     emptySoon: 'Jawapan pertama akan diterbitkan tidak lama lagi.', dateLocale: 'ms-MY',
@@ -98,7 +98,7 @@ export const UI: Record<UiKey, Record<string, string>> = {
     navHome: '首页', navAbout: '关于', featured: '精选', related: '相关阅读',
     faqHeading: '常见问题', metaBy: '作者', metaPublished: '发布于', metaUpdated: '更新于',
     metaReviewed: '审核', quickAnswer: '快速解答',
-    pickerLabel: '地区与语言', footerEditorial: '编辑标准', footerDisclaimer: '医疗免责声明',
+    pickerLabel: '地区与语言', footerEditorial: '编辑标准', footerHowWeReview: '我们如何审核', footerDisclaimer: '医疗免责声明',
     footerPrivacy: '隐私',
     rights: '保留所有权利。', disclaimerLine: '教育内容，并非医疗建议。',
     emptySoon: '首批解答即将发布。', dateLocale: 'zh-Hans',
@@ -109,7 +109,7 @@ export const UI: Record<UiKey, Record<string, string>> = {
     navHome: '首頁', navAbout: '關於', featured: '精選', related: '相關閱讀',
     faqHeading: '常見問題', metaBy: '作者', metaPublished: '發佈於', metaUpdated: '更新於',
     metaReviewed: '審核', quickAnswer: '快速解答',
-    pickerLabel: '地區與語言', footerEditorial: '編輯標準', footerDisclaimer: '醫療免責聲明',
+    pickerLabel: '地區與語言', footerEditorial: '編輯標準', footerHowWeReview: '我們如何審核', footerDisclaimer: '醫療免責聲明',
     footerPrivacy: '隱私',
     rights: '保留所有權利。', disclaimerLine: '教育內容，並非醫療建議。',
     emptySoon: '首批解答即將發佈。', dateLocale: 'zh-Hant',
