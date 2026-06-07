@@ -20,14 +20,18 @@ interface Props {
   description: string;
   jsonLd?: Record<string, any>[];
   ogType?: string;
+  /** per-page OG/social image (absolute path); falls back to SITE.ogImage. */
+  image?: string;
 }
 
 const {
   edition, slug = null, pathOverride, presentEditions,
-  title, rawTitle = false, description, jsonLd = [], ogType = 'website',
+  title, rawTitle = false, description, jsonLd = [], ogType = 'website', image,
 } = Astro.props;
 
 const abs = (p: string) => new URL(p, Astro.site).href;
+const ogImage = image ?? SITE.ogImage;
+const ogImageAbs = ogImage ? abs(ogImage) : '';
 const canonicalPath = pathOverride ?? pagePath(edition, slug);
 const canonical = abs(canonicalPath);
 
@@ -75,7 +79,9 @@ const breadcrumbLd = isHome ? null : {
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:locale" content={ogLocale} />
+    {ogImageAbs && <meta property="og:image" content={ogImageAbs} />}
     <meta name="twitter:card" content="summary_large_image" />
+    {ogImageAbs && <meta name="twitter:image" content={ogImageAbs} />}
 
     <!-- Organization structured data — the publisher entity for AI engines -->
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -84,6 +90,9 @@ const breadcrumbLd = isHome ? null : {
       name: SITE.name,
       url: SITE.domain,
       description: SITE.orgDescription,
+      foundingDate: String(SITE.foundingYear),
+      knowsAbout: SITE.knowsAbout,
+      publishingPrinciples: abs('/editorial-standards/'),
     })} />
 
     <!-- WebSite structured data — site-level entity for search + AI engines -->

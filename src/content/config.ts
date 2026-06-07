@@ -16,6 +16,8 @@ const articleSchema = z.object({
   author: z.string().default(SITE.defaultAuthor),
   category: z.string().default('Wellness'),
   featured: z.boolean().default(false),
+  /** optional absolute path to a per-article OG/social image; drives og:image + ImageObject. */
+  image: z.string().optional(),
   faqs: z.array(z.object({ q: z.string(), a: z.string() })).default([]),
 });
 

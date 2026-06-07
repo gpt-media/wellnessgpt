@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Newsletter from './Newsletter.astro';
 import type { Edition } from '../lib/editions';
 import { pagePath, parseEntryId } from '../lib/editions';
 import { SITE, HERO, UI } from '../lib/site';
@@ -57,5 +58,7 @@ const sections = [
       </section>
     ))}
     {all.length === 0 && <p>{t.emptySoon}</p>}
+
+    <Newsletter edition={edition} />
   </div>
 </BaseLayout>

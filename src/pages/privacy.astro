@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { DEFAULT_EDITION } from '../lib/editions';
+import { SITE } from '../lib/site';
+
+const updated = 'June 2026';
+---
+<BaseLayout
+  edition={DEFAULT_EDITION}
+  pathOverride="/privacy/"
+  title="Privacy"
+  description="How TheWellnessGPT handles your data: what we collect, why, and your choices. We keep it minimal."
+>
+  <article class="article">
+    <div class="wrap">
+      <p class="kicker">Privacy</p>
+      <h1>Privacy policy</h1>
+      <p class="meta">Last updated: {updated}</p>
+      <div class="article-body">
+        <p>{SITE.name} keeps data collection to a minimum. This page explains what we collect and your choices.</p>
+
+        <h2>What we collect</h2>
+        <ul>
+          <li><strong>Email address</strong> — only if you choose to subscribe to our newsletter. We use it to send occasional wellness answers and updates, nothing else.</li>
+          <li><strong>Basic, aggregate analytics</strong> — standard, privacy-respecting measures of which pages are read, so we know what to write next. We do not build advertising profiles of you.</li>
+        </ul>
+
+        <h2>How we use it</h2>
+        <p>Your email is used only to send the newsletter you asked for. We do not sell your data, and we do not share it except with the email service provider that delivers our newsletter on our behalf.</p>
+
+        <h2>Your choices</h2>
+        <ul>
+          <li>Every newsletter includes a one-click unsubscribe. You can opt out at any time.</li>
+          <li>You can ask us to delete the email we hold for you — see the contact below.</li>
+        </ul>
+
+        <h2>Cookies</h2>
+        <p>We use only what's needed for the site to work and for basic, aggregate analytics. We do not use third-party advertising cookies.</p>
+
+        <h2>Contact</h2>
+        <p>For any privacy request, contact us via the address listed on our <a href="/about/">About</a> page.</p>
+
+        <p><em>This policy may be updated as the site grows; the "last updated" date above will change when it does.</em></p>
+      </div>
+    </div>
+  </article>
+</BaseLayout>

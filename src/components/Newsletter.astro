@@ -1,0 +1,36 @@
+---
+// Newsletter.astro — first-party audience capture for the media → commerce funnel.
+//
+// Renders ONLY when SITE.newsletter.enabled is true (founder flips it once an ESP/endpoint is
+// chosen — PII handling + the independent-publication footprint are a founder call). Until then
+// it ships dormant: no dead form on the live site. The form POSTs the email to SITE.newsletter.
+// action (a standard email-capture endpoint). In-language; links to /privacy/.
+import type { Edition } from '../lib/editions';
+import { SITE, UI } from '../lib/site';
+
+interface Props { edition: Edition; }
+const { edition } = Astro.props;
+const t = UI[edition.ui];
+const nl = SITE.newsletter;
+---
+{nl.enabled && (
+  <aside class="newsletter" aria-label={t.nlHeading}>
+    <div class="nl-inner">
+      <h2 class="nl-heading">{t.nlHeading}</h2>
+      <p class="nl-sub">{t.nlSub}</p>
+      <form class="nl-form" action={nl.action} method="post">
+        <input
+          class="nl-input"
+          type="email"
+          name="email"
+          required
+          autocomplete="email"
+          placeholder={t.nlPlaceholder}
+          aria-label={t.nlPlaceholder}
+        />
+        <button class="nl-button" type="submit">{t.nlButton}</button>
+      </form>
+      <p class="nl-privacy"><a href="/privacy/">{t.nlPrivacy}</a></p>
+    </div>
+  </aside>
+)}

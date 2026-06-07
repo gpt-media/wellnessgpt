@@ -108,3 +108,20 @@ h3 { font-size: 1.25rem; margin: 1.5em 0 0.4em; }
   .hero .tagline { font-size: 2rem; }
   .hero { padding: 40px 0 28px; }
 }
+
+/* AEO quick-answer block — the liftable direct answer at the top of every article */
+.quick-answer { background: var(--paper-2); border-left: 3px solid var(--accent); border-radius: 4px; padding: 14px 18px; margin: 0 0 28px; }
+.quick-answer .qa-label { font-family: var(--sans); font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin: 0 0 4px; }
+.quick-answer p:last-child { margin: 0; font-size: 1.02rem; color: var(--ink); }
+
+/* Newsletter capture (media -> commerce funnel) */
+.newsletter { border-top: 1px solid var(--line); margin: 48px 0 0; padding: 32px 0 8px; }
+.newsletter .nl-heading { font-size: 1.35rem; margin: 0 0 6px; }
+.newsletter .nl-sub { color: var(--ink-soft); margin: 0 0 16px; font-size: 1rem; }
+.newsletter .nl-form { display: flex; flex-wrap: wrap; gap: 10px; }
+.newsletter .nl-input { flex: 1 1 220px; padding: 11px 14px; font-size: 1rem; font-family: var(--sans); border: 1px solid var(--line); border-radius: 6px; background: var(--paper); color: var(--ink); }
+.newsletter .nl-input:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: var(--accent); }
+.newsletter .nl-button { padding: 11px 22px; font-size: 1rem; font-weight: 600; font-family: var(--sans); color: var(--paper); background: var(--accent); border: 0; border-radius: 6px; cursor: pointer; }
+.newsletter .nl-button:hover { opacity: 0.9; }
+.newsletter .nl-privacy { font-size: 0.8rem; color: var(--ink-soft); margin: 10px 0 0; }
+.newsletter .nl-privacy a { color: var(--ink-soft); }

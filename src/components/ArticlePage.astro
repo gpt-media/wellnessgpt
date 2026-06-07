@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Newsletter from './Newsletter.astro';
 import type { Edition } from '../lib/editions';
 import { pagePath } from '../lib/editions';
 import { SITE, UI } from '../lib/site';
@@ -17,19 +18,30 @@ const d = entry.data;
 const t = UI[edition.ui];
 const fmt = (dt: Date) => dt.toLocaleDateString(t.dateLocale, { year: 'numeric', month: 'long', day: 'numeric' });
 const url = new URL(pagePath(edition, slug), Astro.site).href;
+const abs = (p: string) => new URL(p, Astro.site).href;
+const imageAbs = d.image ? abs(d.image) : (SITE.ogImage ? abs(SITE.ogImage) : '');
+
+// Named credentialed reviewer (E-E-A-T for YMYL health content). Dormant until SITE.reviewer
+// is set to a REAL reviewer — never fabricated. When present it adds reviewedBy + lastReviewed.
+const reviewedBy = SITE.reviewer
+  ? { '@type': 'Person', name: SITE.reviewer.name, jobTitle: SITE.reviewer.credential, ...(SITE.reviewer.url ? { url: SITE.reviewer.url } : {}) }
+  : null;
 
 // Article structured data — a citeable, dated, authored answer for AI engines.
-const articleSchema = {
+const articleSchema: Record<string, any> = {
   '@context': 'https://schema.org',
   '@type': 'Article',
   headline: d.title,
   description: d.description,
   datePublished: d.publishDate.toISOString(),
   dateModified: (d.updatedDate ?? d.publishDate).toISOString(),
-  author: { '@type': 'Organization', name: d.author },
+  author: { '@type': 'Organization', name: SITE.author.name, url: SITE.author.url },
   publisher: { '@type': 'Organization', name: SITE.name, url: SITE.domain },
   mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+  publishingPrinciples: abs('/editorial-standards/'),
   inLanguage: edition.hreflang,
+  ...(imageAbs ? { image: { '@type': 'ImageObject', url: imageAbs } } : {}),
+  ...(reviewedBy ? { reviewedBy, lastReviewed: (d.updatedDate ?? d.publishDate).toISOString() } : {}),
 };
 // FAQPage structured data — the highest-value schema for getting pulled into AI answers.
 const faqSchema = d.faqs.length
@@ -54,15 +66,25 @@ const jsonLd = faqSchema ? [articleSchema, faqSchema] : [articleSchema];
   description={d.description}
   jsonLd={jsonLd}
   ogType="article"
+  image={d.image}
 >
   <article class="article">
     <div class="wrap">
       <p class="kicker">{d.category}</p>
       <h1>{d.title}</h1>
       <p class="meta">
-        {t.metaBy} {d.author} · {t.metaPublished} {fmt(d.publishDate)}
+        {t.metaBy} <a href={SITE.author.url} rel="author">{d.author}</a>
+        {SITE.reviewer && <> · {t.metaReviewed} {SITE.reviewer.name}, {SITE.reviewer.credential}</>}
+        · {t.metaPublished} {fmt(d.publishDate)}
         {d.updatedDate && <> · {t.metaUpdated} {fmt(d.updatedDate)}</>}
       </p>
+
+      {/* AEO: a liftable, direct answer up top — the exact shape AI engines quote. */}
+      <div class="quick-answer">
+        <p class="qa-label">{t.quickAnswer}</p>
+        <p>{d.description}</p>
+      </div>
+
       <div class="article-body">
         <Content />
       </div>
@@ -78,6 +100,8 @@ const jsonLd = faqSchema ? [articleSchema, faqSchema] : [articleSchema];
           ))}
         </section>
       )}
+
+      <Newsletter edition={edition} />
     </div>
   </article>
 </BaseLayout>
