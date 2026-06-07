@@ -1,0 +1,2 @@
+# Em-dash allowlist: any rendered-text context containing one of these substrings is exempt from check:emdash.
+# One substring per line. Use sparingly — only for genuinely legitimate em-dashes (e.g. a quoted source title).
