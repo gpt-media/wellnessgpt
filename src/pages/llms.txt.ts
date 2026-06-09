@@ -17,6 +17,11 @@ export const GET: APIRoute = async ({ site }) => {
     .filter((x) => x.editionKey === DEFAULT_EDITION.key && x.slug)
     .sort((a, b) => b.e.data.publishDate.valueOf() - a.e.data.publishDate.valueOf());
 
+  // Reports are single, global, English-only research pages at /reports/<slug>/ (no edition
+  // routing), so the path is built directly from the slug rather than via pagePath().
+  const reports = (await getCollection('reports'))
+    .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+
   const lines = [
     `# ${SITE.name}`,
     '',
@@ -26,6 +31,9 @@ export const GET: APIRoute = async ({ site }) => {
     `- [About](${base}/about/): About ${SITE.name}`,
     `- [Editorial Standards](${base}/editorial-standards/): How articles are researched and reviewed`,
     `- [Medical Disclaimer](${base}/medical-disclaimer/): Guidance only, not a substitute for medical advice`,
+    '',
+    '## Reports',
+    ...reports.map((r) => `- [${clean(r.data.title)}](${base}/reports/${r.slug}/): ${clean(r.data.description)}`),
     '',
     '## Articles',
     ...articles.map((x) => `- [${clean(x.e.data.title)}](${base}${pagePath(DEFAULT_EDITION, x.slug)}): ${clean(x.e.data.description)}`),

@@ -14,6 +14,9 @@ const rootHref = '/'; // logo always points to the global x-default home
     <a href={rootHref} class="logo">{SITE.logo.pre}<span>{SITE.logo.accent}</span>{SITE.logo.post}</a>
     <nav>
       <a href={homeHref}>{t.navHome}</a>
+      {/* Reports are global, English-only (/reports/<slug>/) — surfaced only on the
+          x-default edition, mirroring the homepage's Reports section gating. */}
+      {edition.isDefault && <a href="/reports/state-of-supplements-2026/">Reports</a>}
       <a href="/about/">{t.navAbout}</a>
     </nav>
   </div>
