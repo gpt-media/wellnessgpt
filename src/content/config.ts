@@ -26,4 +26,18 @@ const articleSchema = z.object({
 });
 
 const articles = defineCollection({ type: 'content', schema: articleSchema });
-export const collections = { articles };
+
+// `reports` collection — original, data-led research reports (e.g. "The State of
+// Supplements 2026"). Distinct from `articles`: reports are single, global, English-only
+// long-form analyses published at /reports/<slug>/ via a bespoke page, not the 8-edition
+// articles routing. Minimal schema; the report's structured data (Dataset + Article
+// @graph) lives in its bespoke page, the same way ArticlePage builds its own JSON-LD.
+const reportSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  publishDate: z.coerce.date(),
+  updatedDate: z.coerce.date().optional(),
+});
+
+const reports = defineCollection({ type: 'content', schema: reportSchema });
+export const collections = { articles, reports };

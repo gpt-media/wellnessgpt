@@ -57,6 +57,20 @@ const sections = [
         </ul>
       </section>
     ))}
+
+    {/* Original research reports — global, English-only, surfaced on the x-default home. */}
+    {edition.isDefault && (
+      <section class="cluster">
+        <h2 class="section-title">Reports</h2>
+        <ul class="article-list">
+          <li>
+            <a class="title" href="/reports/state-of-supplements-2026/">The State of Supplements 2026</a>
+            <p>Original analysis of US government data on who takes dietary supplements, the most-used products, and the federal safety signal. Sourced from CDC NHANES, FDA CAERS, and NIH ODS, not a poll.</p>
+            <span class="meta">Report · {fmt(new Date('2026-06-10'))}</span>
+          </li>
+        </ul>
+      </section>
+    )}
     {all.length === 0 && <p>{t.emptySoon}</p>}
 
     <Newsletter edition={edition} />
