@@ -1,0 +1,99 @@
+---
+// Bespoke page for the original research report "The State of Supplements 2026".
+// Published at /reports/state-of-supplements-2026/ (global, English, x-default) — outside
+// the 8-edition articles routing. Mirrors the bespoke-page pattern of about.astro:
+// DEFAULT_EDITION + pathOverride + BaseLayout, rendering the markdown body from the
+// `reports` collection and injecting the report's Dataset + Article @graph as JSON-LD
+// the same way ArticlePage builds and passes its own structured data.
+import { getEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { DEFAULT_EDITION } from '../../lib/editions';
+import { SITE, UI } from '../../lib/site';
+
+const CANONICAL_PATH = '/reports/state-of-supplements-2026/';
+const url = new URL(CANONICAL_PATH, Astro.site).href; // absolute, trailing-slash canonical
+
+const entry = await getEntry('reports', 'state-of-supplements-2026');
+if (!entry) throw new Error('reports/state-of-supplements-2026 entry not found');
+const { Content } = await entry.render();
+const d = entry.data;
+
+const t = UI[DEFAULT_EDITION.ui];
+const fmt = (dt: Date) => dt.toLocaleDateString(t.dateLocale, { year: 'numeric', month: 'long', day: 'numeric' });
+
+// Report structured data — Dataset + Article @graph. One @graph object => one
+// <script type="application/ld+json"> in <head> (BaseLayout renders each jsonLd entry as a
+// script). All url/@id values use the trailing-slash canonical so the page is self-consistent.
+const reportLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Dataset',
+      name: 'The State of Supplements 2026',
+      description:
+        'Original analysis of US government data on dietary supplement use by demographic, the most-used products, and the federal adverse-event safety signal, drawn from CDC NHANES (NCHS Data Brief No. 399), FDA CAERS via openFDA, and NIH Office of Dietary Supplements.',
+      url,
+      datePublished: '2026-06-10',
+      creator: { '@type': 'Organization', name: 'TheWellnessGPT', url: 'https://thewellnessgpt.com' },
+      license: 'https://creativecommons.org/licenses/by/4.0/',
+      isBasedOn: [
+        'https://www.cdc.gov/nchs/products/databriefs/db399.htm',
+        'https://open.fda.gov/data/caers/',
+        'https://ods.od.nih.gov/factsheets/MVMS-HealthProfessional/',
+      ],
+      variableMeasured: [
+        { '@type': 'PropertyValue', name: 'Adults using any dietary supplement, past 30 days', value: '57.6', unitText: 'PERCENT' },
+        { '@type': 'PropertyValue', name: 'Women using any dietary supplement', value: '63.8', unitText: 'PERCENT' },
+        { '@type': 'PropertyValue', name: 'Men using any dietary supplement', value: '50.8', unitText: 'PERCENT' },
+        { '@type': 'PropertyValue', name: 'Women aged 60+ using any dietary supplement', value: '80.2', unitText: 'PERCENT' },
+        { '@type': 'PropertyValue', name: 'FDA CAERS reports naming a supplement-category product as suspect', value: '54221', unitText: 'reports' },
+      ],
+    },
+    {
+      '@type': 'Article',
+      headline: 'The State of Supplements 2026',
+      description:
+        'More than half of US adults take a dietary supplement, women and older adults most of all, while supplements top the federal food adverse-event file and the evidence for the most-used products stays limited.',
+      url,
+      datePublished: '2026-06-10',
+      author: { '@type': 'Organization', name: 'TheWellnessGPT' },
+      publisher: { '@type': 'Organization', name: 'TheWellnessGPT', url: 'https://thewellnessgpt.com' },
+      citation: [
+        'Mishra S, Stierman B, Gahche JJ, Potischman N. Dietary Supplement Use Among Adults: United States, 2017-2018. NCHS Data Brief No. 399. 2021. https://doi.org/10.15620/cdc:101131',
+        'FDA CFSAN Adverse Event Reporting System (CAERS), via openFDA food/event API, data through 2026-05-14. https://open.fda.gov/data/caers/',
+        'NIH Office of Dietary Supplements fact sheets (Multivitamin/Mineral, Vitamin D, Omega-3). https://ods.od.nih.gov/factsheets/list-all/',
+      ],
+    },
+  ],
+};
+---
+<BaseLayout
+  edition={DEFAULT_EDITION}
+  pathOverride={CANONICAL_PATH}
+  title={d.title}
+  description={d.description}
+  jsonLd={[reportLd]}
+  ogType="article"
+>
+  <article class="article">
+    <div class="wrap">
+      <p class="kicker">Report</p>
+      <h1>{d.title}</h1>
+      <p class="meta">
+        {t.metaBy} <a href={SITE.author.url} rel="author">{SITE.author.name}</a>
+        · {t.metaPublished} {fmt(d.publishDate)}
+        {d.updatedDate && <> · {t.metaUpdated} {fmt(d.updatedDate)}</>}
+      </p>
+
+      {/* AEO: a liftable, direct answer up top — the exact shape AI engines quote. */}
+      <div class="quick-answer">
+        <p class="qa-label">{t.quickAnswer}</p>
+        <p>{d.description}</p>
+      </div>
+
+      <div class="article-body">
+        <Content />
+      </div>
+    </div>
+  </article>
+</BaseLayout>
