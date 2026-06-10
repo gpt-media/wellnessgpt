@@ -5,24 +5,16 @@ import { SITE, UI } from '../lib/site';
 
 interface Props {
   edition: Edition;
-  slug?: string | null;
-  presentEditions?: Edition[];
-  pathOverride?: string;
 }
-const { edition, slug = null, presentEditions, pathOverride } = Astro.props;
+const { edition } = Astro.props;
 const t = UI[edition.ui];
 const year = 2026;
 
 // Region/language switcher lives in the footer (clean, authority-style header; hreflang does
-// the search-engine routing). No auto-redirect — the reader chooses. Each link lands on the
-// same page where it exists in the target edition, else that edition's homepage.
-const present = presentEditions ?? [edition];
-const presentKeys = new Set(present.map((e) => e.key));
-function switchHref(e: Edition): string {
-  if (pathOverride) return e.key === edition.key ? pathOverride : pagePath(e);
-  if (presentKeys.has(e.key)) return pagePath(e, slug);
-  return pagePath(e);
-}
+// the search-engine routing). No auto-redirect — the reader chooses. Compact zero-JS
+// <details> disclosure: collapsed to one line by default, links remain in the DOM (crawlable).
+// Each link points to the target edition's HOMEPAGE (never per-page alternates), so the
+// switcher can never 404 on pages that exist in only some editions (e.g. /reports/).
 const groups = editionsByCountry();
 ---
 <footer class="site-footer">
@@ -34,23 +26,26 @@ const groups = editionsByCountry();
       <a href="/medical-disclaimer/">{t.footerDisclaimer}</a>
       <a href="/privacy/">{t.footerPrivacy}</a>
     </nav>
-    <div class="footer-editions" aria-label={t.pickerLabel}>
-      {groups.map((g) => (
-        <span class="fe-group">
-          <span class="fe-flag">{g.flag}</span>
-          {g.editions.map((e, i) => (
-            <>
-              {i > 0 && <span class="fe-sep">·</span>}
-              <a
-                href={switchHref(e)}
-                class={e.key === edition.key ? 'on' : undefined}
-                aria-current={e.key === edition.key ? 'true' : undefined}
-              >{e.langLabel}</a>
-            </>
-          ))}
-        </span>
-      ))}
-    </div>
+    <details class="lang-switch">
+      <summary aria-label={t.pickerLabel}><span class="ls-globe" aria-hidden="true">🌐</span> {t.footerLanguage}</summary>
+      <ul class="ls-list">
+        {groups.map((g) => (
+          <li>
+            <span class="ls-region"><span class="ls-flag" aria-hidden="true">{g.flag}</span> {g.country}</span>
+            <span class="ls-langs">
+              {g.editions.map((e, i) => (
+                <>
+                  {i > 0 && <span class="ls-sep">·</span>}
+                  {e.key === edition.key
+                    ? <span class="on" aria-current="true">{e.langLabel}</span>
+                    : <a href={pagePath(e)}>{e.langLabel}</a>}
+                </>
+              ))}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </details>
     <p class="fineprint">{t.disclaimerLine}</p>
     <p class="fineprint">&copy; {year} {SITE.name}. {t.rights}</p>
   </div>
